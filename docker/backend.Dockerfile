@@ -77,5 +77,9 @@ EXPOSE 8000
 # Override by docker-compose, this is the default command.
 # HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD curl -f "https://127.0.0.1:8000" || exit 1
 
+RUN apt update && apt install -y bash netcat-openbsd;
+
 # Start application
 CMD ["python3", "start_server.py"]
+
+HEALTHCHECK --interval=1m --start-period=30s CMD nc -zn 0.0.0.0 ${BACKEND_PORT:-8000} || exit 1
